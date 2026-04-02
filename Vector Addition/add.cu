@@ -37,6 +37,9 @@ int main(void){
 
     add<<<1, n>>>(d_a, d_b, d_c);
     cudaMemcpy(h_c, d_c, size, cudaMemcpyDeviceToHost);
+    cudaFree(d_a);
+    cudaFree(d_b);
+    cudaFree(d_c);
     cudaDeviceSynchronize();
     std::cout << "Result: \n";
     for (int i = 0; i<n; i++){
