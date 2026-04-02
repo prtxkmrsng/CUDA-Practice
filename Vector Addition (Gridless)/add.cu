@@ -1,11 +1,12 @@
 #include <iostream>
 #include <cuda_runtime.h>
 
-__global__ void add(int *a, int *b, int *c){
+__global__ void add(int *a, int *b, int *c, int N){
     int i = threadIdx.x;
+    if (i < N){
     a[i] = a[i] * a[i];
     b[i] = b[i] * b[i] * b[i];
-    c[i] = a[i] + b[i];
+    c[i] = a[i] + b[i];}
 }
 
 int main(void){
@@ -16,6 +17,11 @@ int main(void){
     int n;
     std::cout << "Enter the number of elements: ";
     std:: cin >> n;
+
+    if(n > 1024){
+        std::cout << "Number of elements should be less than or equal to 1024." << std::endl;
+        return 1;
+    }
 
     h_a = (int*)malloc(n * sizeof(int));
     h_b = (int*)malloc(n * sizeof(int));
@@ -35,7 +41,7 @@ int main(void){
     cudaMemcpy(d_a, h_a, size, cudaMemcpyHostToDevice);
     cudaMemcpy(d_b, h_b, size, cudaMemcpyHostToDevice);
 
-    add<<<1, n>>>(d_a, d_b, d_c);
+    add<<<1, n>>>(d_a, d_b, d_c, n);
     cudaMemcpy(h_c, d_c, size, cudaMemcpyDeviceToHost);
     cudaFree(d_a);
     cudaFree(d_b);
