@@ -1,0 +1,1 @@
+Simple CUDA programm that initializes an array on the gpu with 1 block and 10 threads and prints 'Hello World' from each.
